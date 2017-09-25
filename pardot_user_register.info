@@ -1,0 +1,5 @@
+name = Pardot User Registration
+description = Module to allow User registration values to be submitted to Pardot
+package = "Pardot"
+version = "7.x-1.0"
+core = 7.x
