@@ -4,38 +4,38 @@
  * Implements hook_menu().
  */
 function pardot_user_register_menu() {
-    $items['admin/config/services/pardot_user_register'] = array(
-        'title' => 'Pardot User Registration',
-        'description' => 'Setup Pardot Form Handler URL.',
-        'page callback' => 'drupal_get_form',
-        'page arguments' => array('pardot_user_register_form'),
-        'access arguments' => array('administer pardot user registration'),
-        'type' => MENU_NORMAL_ITEM,
-        'file' => 'pardot_user_register.admin.inc',
-    );
-    return $items;
+  $items['admin/config/services/pardot_user_register'] = array(
+    'title' => 'Pardot User Registration',
+    'description' => 'Setup Pardot Form Handler URL.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('pardot_user_register_form'),
+    'access arguments' => array('administer pardot user registration'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'pardot_user_register.admin.inc',
+  );
+  return $items;
 }
 
 /**
  * Implements hook_form_alter().
  */
 function pardot_user_register_form_alter(&$form, $form_state, $form_id) {
-    if ($form_id == 'user_register_form') {
-        $form['#submit'][] = 'pardot_user_register_submit';
-    }  
+  if ($form_id == 'user_register_form') {
+    $form['#submit'][] = 'pardot_user_register_submit';
+  }  
 }
 
 function pardot_user_register_submit(&$form, &$form_state) {
-    $url = variable_get('pardot_form_uri');
-    $data = $form_state['values']['submitted_tree'];
+  $url = variable_get('pardot_form_uri');
+  $data = $form_state['values']['submitted_tree'];
 
-    $options = array(
-        'method' => 'POST',
-        'data' => http_build_query($data, '', '&'),
-        'timeout' => 15,
-        'headers' => array('Content-Type' => 'application/x-www-form-urlencoded'),
-    );
-    $result = drupal_http_request($url, $options);
-    if($result->error)
-        watchdog('Pardot Error', $result->error, array(), WATCHDOG_ERROR);
+  $options = array(
+    'method' => 'POST',
+    'data' => http_build_query($data, '', '&'),
+    'timeout' => 15,
+    'headers' => array('Content-Type' => 'application/x-www-form-urlencoded'),
+  );
+  $result = drupal_http_request($url, $options);
+  if ($result->error)
+    watchdog('Pardot Error', $result->error, array(), WATCHDOG_ERROR);
 }
