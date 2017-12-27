@@ -9,11 +9,19 @@ function pardot_user_register_menu() {
     'description' => 'Setup Pardot Form Handler URL.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('pardot_user_register_form'),
-    'access arguments' => array('administer pardot user registration'),
+    'access callback' => 'check_user_has_role',
     'type' => MENU_NORMAL_ITEM,
     'file' => 'pardot_user_register.admin.inc',
   );
   return $items;
+}
+
+function check_user_has_role() {
+  global $user;
+  if (in_array('administrator', $user->roles)) {
+    return TRUE;
+  }
+  return FALSE;
 }
 
 /**
@@ -22,7 +30,7 @@ function pardot_user_register_menu() {
 function pardot_user_register_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'user_register_form') {
     $form['#submit'][] = 'pardot_user_register_submit';
-  }  
+  }
 }
 
 function pardot_user_register_submit(&$form, &$form_state) {
